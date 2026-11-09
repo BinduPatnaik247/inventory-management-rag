@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Inventory · Local Dashboard</title>
+<style>
+  :root { font: 15px system-ui,Arial; color:#1b2935; background:#f4f7fa; }
+  body {max-width:1120px;margin:30px auto;padding:0 20px}
+  h1{margin-bottom:5px}p.sub{color:#64748b;margin-top:0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:13px;padding:20px;margin-bottom:18px;box-shadow:0 4px 14px #0f172a08}
+  label{display:block;font-weight:600;margin:10px 0 4px;font-size:13px}
+  input,select,button{box-sizing:border-box;font:inherit;padding:10px;border-radius:8px;border:1px solid #cbd5e1;width:100%;}
+  button{background:#2563eb;border:0;color:white;font-weight:650;cursor:pointer;margin-top:13px}
+  button:hover{background:#1d4ed8}button.secondary{background:#334155}
+  table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px 7px;border-bottom:1px solid #e2e8f0}
+  th{color:#475569} .metrics{font-size:26px;font-weight:750;margin:8px 0}
+  #status{padding:10px 14px;border-radius:8px;min-height:20px} .error{background:#fee2e2;color:#991b1b}.ok{background:#dcfce7;color:#166534}
+  .scroll{overflow:auto} .tiny{font-size:12px;color:#64748b}
+</style>
+</head><body>
+<h1>Smart Inventory</h1><p class="sub">Single-business stock and order management · Starter dashboard</p>
+<section class="card"><label for="apiKey">Local API key</label><input id="apiKey" type="password" placeholder="local-dev-key-change-me" autocomplete="off" /><button id="connect">Connect and refresh</button><p class="tiny">This starter stores the entered key only in page memory. Do not expose the dev key publicly.</p><div id="status" role="status"></div></section>
+<section class="grid" id="metrics"><div class="card">Connect to load inventory metrics</div></section>
+<section class="grid">
+ <form id="warehouseForm" class="card"><h2>Add warehouse</h2><label>Code</label><input name="code" placeholder="MAIN" required minlength="2"><label>Name</label><input name="name" placeholder="Main warehouse" required><button>Create warehouse</button></form>
+ <form id="productForm" class="card"><h2>Add product</h2><label>SKU</label><input name="sku" placeholder="PAPER-A4" required minlength="2"><label>Name</label><input name="name" placeholder="A4 printer paper" required><label>Price (USD)</label><input name="price" type="number" min="0" step="0.01" value="12.50" required><label>Reorder at or below</label><input name="reorder_point" type="number" min="0" value="5" required><button>Create product</button></form>
+ <form id="adjustForm" class="card"><h2>Adjust inventory</h2><label>Product</label><select name="product_id" id="adjustProduct" required></select><label>Warehouse</label><select name="warehouse_id" id="adjustWarehouse" required></select><label>Change (+ or - units)</label><input name="delta" type="number" value="10" step="1" required><label>Reason</label><input name="reason" value="Stock received" required><button>Save stock change</button></form>
+ <form id="orderForm" class="card"><h2>Fulfill an order</h2><label>Customer</label><input name="customer_name" value="Walk-in customer" required><label>Product</label><select name="product_id" id="orderProduct" required></select><label>Warehouse</label><select name="warehouse_id" id="orderWarehouse" required></select><label>Quantity</label><input name="quantity" type="number" value="1" min="1" required><button>Create &amp; fulfill order</button></form>
+</section>
+<section class="grid">
+ <div class="card scroll"><h2>Current stock</h2><table><thead><tr><th>SKU</th><th>Warehouse</th><th>Available</th></tr></thead><tbody id="stocks"></tbody></table></div>
+ <div class="card scroll"><h2>Low-stock alerts</h2><table><thead><tr><th>SKU</th><th>Warehouse</th><th>On hand</th><th>Reorder at</th></tr></thead><tbody id="alerts"></tbody></table></div>
+</section>
+<section class="card scroll"><h2>Recent orders</h2><table><thead><tr><th>ID</th><th>Customer</th><th>Status</th><th>Total</th><th>Created</th></tr></thead><tbody id="orders"></tbody></table></section>
+<script src="/static/dashboard.js"></script></body></html>
